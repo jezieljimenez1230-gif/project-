@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pink Thank You Surprise 🎁</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'Quicksand',sans-serif;
+  background:linear-gradient(135deg,#ff9ec4,#ffcce0);
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:white;
+}
+
+/* MUSIC BUTTON */
+#musicBtn{
+  position:fixed;
+  top:15px;
+  right:15px;
+  background:white;
+  color:#ff4fa3;
+  border:none;
+  padding:10px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* GIFT */
+#gift{
+  font-size:85px;
+  position:absolute;
+  top:40%;
+  transform:translate(-50%,-50%);
+  left:50%;
+  cursor:pointer;
+  transition:transform .2s;
+  animation:float 2s infinite ease-in-out;
+}
+
+#gift:active{
+  transform:translate(-50%,-50%) scale(0.9);
+}
+
+@keyframes float{
+  0%,100%{transform:translate(-50%,-50%) translateY(0)}
+  50%{transform:translate(-50%,-50%) translateY(-10px)}
+}
+
+/* MESSAGE BOX */
+.msg{
+  display:none;
+  position:absolute;
+  max-width:340px;
+  padding:20px;
+  background:rgba(255,255,255,0.25);
+  border-radius:20px;
+  backdrop-filter:blur(6px);
+  font-size:1.1em;
+  line-height:1.5;
+}
+
+#msg1{ top:35%; }
+#msg2{ top:45%; }
+
+/* BALLOON */
+#balloon{
+  display:none;
+  font-size:75px;
+  position:absolute;
+  bottom:-120px;
+  left:50%;
+  transform:translateX(-50%);
+  cursor:pointer;
+}
+
+.balloon-rise{
+  animation:rise 2s forwards;
+}
+
+@keyframes rise{
+  to{ bottom:45%; }
+}
+
+.balloon-pop{
+  animation:pop .35s forwards;
+}
+
+@keyframes pop{
+  0%{transform:translateX(-50%) scale(1)}
+  50%{transform:translateX(-50%) scale(1.4)}
+  100%{transform:translateX(-50%) scale(0);opacity:0}
+}
+
+/* CONFETTI */
+.confetti{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:#ff69b4;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  to{transform:translateY(100vh);opacity:0}
+}
+
+/* HEARTS */
+.heart{
+  position:absolute;
+  font-size:18px;
+  animation:floatUp 4s linear forwards;
+}
+
+@keyframes floatUp{
+  to{transform:translateY(-110vh);opacity:0}
+}
+
+/* CATS */
+.cat{
+  position:absolute;
+  font-size:38px;
+  animation:dance .6s infinite alternate;
+}
+
+@keyframes dance{
+  from{transform:translateY(0) rotate(-10deg)}
+  to{transform:translateY(-12px) rotate(10deg)}
+}
+
+/* SPARKLES */
+.sparkle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:white;
+  border-radius:50%;
+  animation:sparkle 2s linear forwards;
+}
+
+@keyframes sparkle{
+  to{transform:translateY(-120vh);opacity:0}
+}
+
+</style>
+</head>
+<body>
+
+<button id="musicBtn" onclick="toggleMusic()">🎶 Music</button>
+
+<div id="gift" onclick="openGift()">🎁</div>
+
+<div id="msg1" class="msg"></div>
+<div id="msg2" class="msg"></div>
+
+<div id="balloon" onclick="popBalloon()">🎈</div>
+
+<audio id="openSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3"></audio>
+<audio id="popSound" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_5b6cc3a2f4.mp3"></audio>
+<audio id="bgMusic" loop src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_3b1a7f6c5a.mp3"></audio>
+
+<script>
+let clicks=0;
+let musicOn=false;
+
+const text1="💖 Tita, get ready for a little surprise 💗";
+const text2="💖 Tita,\n\nThank you for always being there for me, for taking care of me, and for supporting me in everything I do.\n\nYou don’t always see it, but I really appreciate all the little things you do for me every day. Because of you, I feel safe, supported, and loved.\n\nThank you for encouraging me to keep learning and improving, especially in Web Stack Development — it really means a lot to me.\n\nI’m so lucky to have you as my tita 💗\n\nI love you so much 😽\n\n— By: Orpha Mae ✨";
+
+function typeText(id,text){
+  const el=document.getElementById(id);
+  el.style.display="block";
+  el.innerHTML="";
+
+  let i=0;
+  (function type(){
+    if(i<text.length){
+      el.innerHTML+=text[i++];
+      setTimeout(type,35);
+    }
+  })();
+}
+
+function openGift(){
+  clicks++;
+  shakeGift();
+
+  if(clicks===3){
+    document.getElementById("gift").style.display="none";
+
+    spawnConfetti();
+    spawnHearts();
+    spawnSparkles();
+
+    document.getElementById("openSound").play();
+    typeText("msg1",text1);
+
+    setTimeout(()=>{
+      const b=document.getElementById("balloon");
+      b.style.display="block";
+      b.classList.add("balloon-rise");
+    },2000);
+  }
+}
+
+function shakeGift(){
+  const g=document.getElementById("gift");
+  g.style.transform="translate(-50%,-50%) scale(0.95)";
+  setTimeout(()=>g.style.transform="translate(-50%,-50%)",100);
+}
+
+function popBalloon(){
+  const b=document.getElementById("balloon");
+  document.getElementById("popSound").play();
+
+  b.classList.add("balloon-pop");
+
+  setTimeout(()=>{
+    b.style.display="none";
+    typeText("msg2",text2);
+    spawnCats();
+  },350);
+}
+
+function spawnConfetti(){
+  for(let i=0;i<120;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="-10px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
+  }
+}
+
+function spawnHearts(){
+  for(let i=0;i<30;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="💗";
+    h.style.left=Math.random()*100+"vw";
+    h.style.bottom="-20px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),4000);
+  }
+}
+
+function spawnSparkles(){
+  for(let i=0;i<40;i++){
+    const s=document.createElement("div");
+    s.className="sparkle";
+    s.style.left=Math.random()*100+"vw";
+    s.style.top="100vh";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),2000);
+  }
+}
+
+function spawnCats(){
+  for(let i=0;i<6;i++){
+    const cat=document.createElement("div");
+    cat.className="cat";
+    cat.innerText="🐱";
+    cat.style.left=Math.random()*100+"vw";
+    cat.style.top=(60+Math.random()*25)+"vh";
+    document.body.appendChild(cat);
+  }
+}
+
+function toggleMusic(){
+  const m=document.getElementById("bgMusic");
+  musicOn=!musicOn;
+  if(musicOn){ m.play(); }
+  else{ m.pause(); }
+}
+</script>
+
+</body>
+</html>
